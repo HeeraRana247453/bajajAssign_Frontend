@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
+import "./App.css";
 
 const App = () => {
   const [input, setInput] = useState("");
@@ -8,7 +9,7 @@ const App = () => {
   const [selectedOptions, setSelectedOptions] = useState([]);
 
   const handleSubmit = async () => {
-    setResponse(null);  // Clear previous response before submitting new data
+    setResponse(null);
     setError(null);
     try {
       const parsedInput = JSON.parse(input);
@@ -16,7 +17,7 @@ const App = () => {
         setError("Invalid input: 'data' should be an array.");
         return;
       }
-      const res = await axios.post("https://bajaj-assign-backend.vercel.app/bfhl", parsedInput);  //request to backend
+      const res = await axios.post("https://bajaj-assign-backend.vercel.app/bfhl", parsedInput);
       setResponse(res.data);
     } catch (err) {
       setError("Invalid JSON or API error");
@@ -24,32 +25,34 @@ const App = () => {
   };
 
   const handleSelectChange = (e) => {
-    const options = [...e.target.selectedOptions].map(option => option.value);
+    const options = [...e.target.selectedOptions].map((option) => option.value);
     setSelectedOptions(options);
   };
 
   return (
-    <div>
-      <h1>Data Processor</h1>
+    <div className="container">
+      <h1>API Input</h1>
       <textarea
-        placeholder="Enter JSON"
+        className="input-box"
+        placeholder='{"data":["M","1","334","4","B"]}'
         value={input}
         onChange={(e) => setInput(e.target.value)}
       ></textarea>
-      <button onClick={handleSubmit}>Submit</button>
-      {error && <p style={{ color: "red" }}>{error}</p>}
+      <button className="submit-button" onClick={handleSubmit}>Submit</button>
+      {error && <p className="error-text">{error}</p>}
       {response && (
-        <div>
-          <h2>Response</h2>
-          <select multiple onChange={handleSelectChange}>
+        <div className="response-section">
+          <h2>Multi Filter</h2>
+          <select className="multi-select" multiple onChange={handleSelectChange}>
             <option value="alphabets">Alphabets</option>
             <option value="numbers">Numbers</option>
             <option value="highest_alphabet">Highest Alphabet</option>
           </select>
+          <h2>Filtered Response</h2>
           {selectedOptions.length === 0 ? (
-            <p>Please select options to display</p>
+            <p className="placeholder-text">Please select options to display</p>
           ) : (
-            <pre>
+            <pre className="response-box">
               {JSON.stringify(
                 Object.fromEntries(
                   Object.entries(response).filter(([key]) => selectedOptions.includes(key))
