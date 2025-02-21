@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import axios from "axios";
-import "./App.css";
 
 const App = () => {
   const [input, setInput] = useState("");
@@ -25,42 +24,55 @@ const App = () => {
   };
 
   const handleSelectChange = (e) => {
-    const options = [...e.target.selectedOptions].map((option) => option.value);
+    const options = [...e.target.selectedOptions].map(option => option.value);
     setSelectedOptions(options);
   };
 
   return (
-    <div className="container">
-      <h1>API Input</h1>
+    <div className="flex flex-col items-center p-6 bg-gray-100 min-h-screen">
+      <h1 className="text-2xl font-bold mb-4">Data Processor</h1>
       <textarea
-        className="input-box"
-        placeholder='{"data":["M","1","334","4","B"]}'
+        className="w-full md:w-2/3 p-3 border border-gray-300 rounded-md"
+        placeholder="Enter JSON"
         value={input}
         onChange={(e) => setInput(e.target.value)}
       ></textarea>
-      <button className="submit-button" onClick={handleSubmit}>Submit</button>
-      {error && <p className="error-text">{error}</p>}
+      <button 
+        onClick={handleSubmit} 
+        className="mt-4 px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
+      >
+        Submit
+      </button>
+      {error && <p className="text-red-500 mt-2">{error}</p>}
       {response && (
-        <div className="response-section">
-          <h2>Multi Filter</h2>
-          <select className="multi-select" multiple onChange={handleSelectChange}>
-            <option value="alphabets">Alphabets</option>
-            <option value="numbers">Numbers</option>
-            <option value="highest_alphabet">Highest Alphabet</option>
-          </select>
-          <h2>Filtered Response</h2>
+        <div className="w-full md:w-2/3 mt-6 p-4 bg-white shadow-lg rounded-md">
+          <h2 className="text-lg font-semibold mb-2">Filtered Response</h2>
+          <div className="mb-2">
+            <label className="font-medium">Multi Filter</label>
+            <select 
+              multiple 
+              onChange={handleSelectChange}
+              className="w-full border border-gray-300 p-2 rounded-md mt-2"
+            >
+              <option value="numbers">Numbers</option>
+              <option value="alphabets">Alphabets</option>
+              <option value="highest_alphabet">Highest Alphabet</option>
+            </select>
+          </div>
           {selectedOptions.length === 0 ? (
-            <p className="placeholder-text">Please select options to display</p>
+            <p className="text-gray-500">Please select options to display</p>
           ) : (
-            <pre className="response-box">
-              {JSON.stringify(
-                Object.fromEntries(
-                  Object.entries(response).filter(([key]) => selectedOptions.includes(key))
-                ),
-                null,
-                2
+            <div className="mt-3 bg-gray-100 p-3 rounded-md">
+              {selectedOptions.includes("numbers") && response.numbers && (
+                <p><strong>Numbers:</strong> {response.numbers.join(", ")}</p>
               )}
-            </pre>
+              {selectedOptions.includes("alphabets") && response.alphabets && (
+                <p><strong>Alphabets:</strong> {response.alphabets.join(", ")}</p>
+              )}
+              {selectedOptions.includes("highest_alphabet") && response.highest_alphabet && (
+                <p><strong>Highest Alphabet:</strong> {response.highest_alphabet}</p>
+              )}
+            </div>
           )}
         </div>
       )}
