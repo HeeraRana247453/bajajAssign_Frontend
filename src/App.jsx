@@ -16,7 +16,7 @@ const App = () => {
         setError("Invalid input: 'data' should be an array.");
         return;
       }
-      const res = await axios.post("https://bajaj-assign-backend.vercel.app/bfhl", parsedInput);
+      const res = await axios.post("https://bajaj-assign-backend.vercel.app/bfhl", parsedInput);  //request to backend
       setResponse(res.data);
     } catch (err) {
       setError("Invalid JSON or API error");
